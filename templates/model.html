@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="conntainer-fluid" style="height: 40px;background-color: #100901;color:white;font-weight: bold;margin-top: 0">
+            <div class="row">
+                <div class="col-sm-3">
+                    <spam>Last Updated: <strong>{{ last.last_date  }} </strong> </spam>
+                </div>
+                <div class="col-sm-3">
+                    <spam> User: <strong>{{ last.user }} </strong></spam>
+
+                </div>
+                <div class="col-sm-3">
+                    <spam>Validation Months: <strong>{{ last.months }}</strong></spam>
+                </div>
+                <div class="col-sm-3">
+                    <spam>Order: <strong>{{ last.order }} </strong></spam>
+                    <spam> Alpha: <strong>{{ last.alpha }}</strong></spam>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+
+                <div class = 'divtitle'>
+                    <h5 style="text-align: center">Actions</h5>
+                </div>
+                <! -- Item change -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingchange">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsechange" aria-expanded="false" aria-controls="flush-collapsechange">
+                        Test Parameters
+                      </button>
+                    </h2>
+                    <div id="flush-collapsechange" class="accordion-collapse collapse" aria-labelledby="flush-headingchange" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+
+                          <form action = "{{url_for('select_variable')}}" method = "POST" enctype = "multipart/form-data">
+                              <label for="variable" class="form-label">Choose Variable:</label>
+                                <input class="form-control" list="variables" name="variable" id="variable">
+                                <datalist id="variables">
+                                  <option value="Euros">
+                                  <option value="Oil">
+                                </datalist>
+                                <label for="order" class="form-label">Order:</label>
+                                <input class="form-control" type="number" name="order" id="order" min="1">
+                                <label for="alpha" class="form-label">Alpha:</label>
+                                <input class="form-control" type="number" name="alpha" id="alpha" min=0>
+                                <label for="monthval" class="form-label">Months Validation</label>
+                                <input class="form-control" type="number" name="monthval" id="monthval" min=1>
+                              <hr>
+                              <input class="form-control" type="submit">
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+                <!-- End Change -->
+
+                <!-- Grid Search-->
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headinggrid">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsegrid" aria-expanded="false" aria-controls="flush-collapsegrid">
+                        Grid Search Param
+                      </button>
+                    </h2>
+                    <div id="flush-collapsegrid" class="accordion-collapse collapse" aria-labelledby="flush-headinggrid" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+
+                          <form action = "{{url_for('select_variable')}}" method = "POST" enctype = "multipart/form-data">
+
+                              <label for="ordermax" class="form-label">Order Max:</label>
+                              <input class="form-control" type="number" name="ordermax" id="ordermax" min="1">
+                              <label for="alphamin" class="form-label">Alpha Min:</label>
+                              <input class="form-control" type="number" name="alphamin" id="alphamin" min=0>
+                              <label for="alphamax" class="form-label">Alpha Max:</label>
+                              <input class="form-control" type="number" name="alphamax" id="alphamax" min=0>
+                              <label for="step" class="form-label">Step:</label>
+                              <input class="form-control" type="number" name="step" id="step" min=0>
+                              <hr>
+                              <input class="form-control" type="submit">
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+
+                <!-- End Grid Search-->
+                <!-- Select Model -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingselect">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseselect" aria-expanded="false" aria-controls="flush-collapseselect">
+                        Select Model
+                      </button>
+                    </h2>
+                    <div id="flush-collapseselect" class="accordion-collapse collapse" aria-labelledby="flush-headingselect" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+
+                          <form action = "{{url_for('select_variable')}}" method = "POST" enctype = "multipart/form-data">
+                              <label for="order_select" class="form-label">Order:</label>
+                              <input class="form-control" type="number" name="order_select" id="order_select" min="1">
+                              <label for="alpha_select" class="form-label">Alpha:</label>
+                              <input class="form-control" type="number" name="alpha_select" id="alpha_select" min=0>
+                              <hr>
+                              <input class="form-control" type="submit">
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+                <!-- End Select Model -->
+            </div>
+            <div class="col-sm-9">
+                <!-- Nav tabs -->
+                <div class="container-fluid" style="margin-top:20px;">
+                    <ul class="nav nav-tabs nav-tabs-custom">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#menu0">Test Model</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#menu1">Grid Search Results</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane container active" id="menu0">
+                            <h4>{{ dataset }}</h4>
+                            <div class="container-fluid" name="test-model" id="test-model">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                         <img style="" src="{{ url_for('static',filename='images/test_model.png')}}"></img>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane container fade" id="menu1">
+                            <div class="container-fluid">
+                            <h4>{{ dataset }}</h4>
+                                <div class="row">
+                                    <div>
+                                        <img style="width:100%" src="{{ url_for('static',filename='images/best_model.png')}}"></img>
+                                    </div>
+                                    <div  style="display:inline-block;">
+                                        <img style="width:100%" src="{{ url_for('static',filename='images/bic_model.png')}}"></img>
+                                        <img style="width:100%" src="{{ url_for('static',filename='images/aic_model.png')}}"></img>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script>
+	TESTER = document.getElementById('tester');
+	Plotly.newPlot( TESTER, [{
+	x: [1, 2, 3, 4, 5],
+	y: [1, 2, 4, 8, 16] }], {
+	margin: { t: 0 } } );
+</script>
+{% endblock %}

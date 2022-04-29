@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- first card -->
+
+        <div class="col-sm-4">
+            <div class="card text-white card-info">
+              <div class="card-header">
+                Dataset Values
+              </div>
+              <div class="card-body">
+                  <p class="card-text">Initial Date : {{ measures.date_ini }}</p>
+                  <p class="card-text">End Date : {{ measures.date_end }}</p>
+                  <p class="card-text">No. Records : {{ measures.num_records }}</p>
+                  <p class="card-text"><small class="text-muted"></small></p>
+              </div>
+            </div>
+        </div>
+
+        <!-- End First Card -->
+
+        <!-- Second card -->
+
+        <div class="col-sm-4">
+            <div class="card text-white card-info">
+              <div class="card-header">
+                Measures
+              </div>
+              <div class="card-body">
+                  <p class="card-text">AdFuller : {{ measures.pvalue }}</p>
+                  <p class="card-text">Mean : {{ measures.mean }}</p>
+                  <p class="card-text">Std : {{ measures.std }}</p>
+              </div>
+            </div>
+        </div>
+
+        <!-- End Second Card -->
+
+        <!-- Third card -->
+
+        <div class="col-sm-4" style="display:none">
+            <div class="card text-white card-info">
+              <div class="card-header">
+                Measures
+              </div>
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+              </div>
+            </div>
+        </div>
+
+        <!-- End Third Card -->
+
+    </div>
+    <!- End Row of Cards -->
+
+    <!-- tabs -->
+
+    <!-- Nav tabs -->
+    <div class="container-fluid" style="margin-top:20px;">
+        <ul class="nav nav-tabs nav-tabs-custom">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#menu0">All Data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#menu1">Autocorrelation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#menu2">Other Variables Correlation</a>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <!-- Analysis tab -->
+          <div class="tab-pane container active" id="menu0">
+              <div id="line-plot-01"></div>
+              <div id="line-plot-02"></div>
+              <div id="line-plot-03"></div>
+          </div>
+            <!-- End Analysis -->
+
+          <div class="tab-pane container fade" id="menu1">
+              <div class="row">
+                  <div class="col-sm-6" id="auto-plot-01"></div>
+                  <div class="col-sm-6" id="auto-plot-02"></div>
+              </div>
+          </div>
+
+          <div class="tab-pane container fade" id="menu2">
+              <div class="row">
+                  <div class="col-sm-2">
+                      <form>
+                          <h5>Choose Variables</h5>
+                          <div class="form-check custom">
+                              <input type="checkbox" class="form-check-input custom_checked" id="check1" name="option1" value="Euros" checked>
+                              <label class="form-check-label" for="check1">Euros</label>
+                          </div>
+                          <div class="form-check">
+                              <input type="checkbox" class="form-check-input custom_checked" id="check2" name="option2" value="Oil" checked>
+                              <label class="form-check-label" for="check2">Oil</label>
+                          </div>
+                          <button type="submit" class="btn btn-dark mt-3">Submit</button>
+                      </form>
+                  </div>
+                  <div class="col-sm-8">
+                      <div class="row">
+
+                          <div class="col-sm-8" id="plot_scatter_01" name="plot_scatter_01">
+
+                          </div>
+
+
+
+                      </div>
+                      <div class="row">
+
+                          <div class="col-sm-8" id="plot_scatter_02" name="plot_scatter_02">
+
+                          </div>
+
+
+                      </div>
+
+                      <div class="row">
+
+                          <div class="col-sm-8" id="plot_scatter_03" name="plot_scatter_03">
+
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+    </div>
+
+    <!-- End tabs -->
+
+</div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script>
+var dataset = []
+var xfile2 = "https://storage.googleapis.com/pythiadata/files/oil.csv"
+var xfile = "https://storage.googleapis.com/pythiadata/files/euros.csv"
+var xfile_mean = "https://storage.googleapis.com/pythiadata/files/euros_mean.csv"
+var xfile_diff = "https://storage.googleapis.com/pythiadata/files/euros_diff.csv"
+var xmin = '2017-02-21'
+var xmax = '2022-02-02'
+var xmin_value = 1.00
+var xmax_value = 1.50
+
+var gcolor = '#792b20';
+
+var xpath = "https://storage.googleapis.com/pythiadata/files/"
+
+var xx = [1,2,3,4,5,6,7,8,9,10,11]
+
+var acf_x0 = [1., 0.99472698, 0.9888362, 0.98295288, 0.97708612, 0.97110879,
+ 0.96523929, 0.95992583, 0.95466651, 0.9497964, 0.94483892]
+
+var acf_lower = [ 0., -0.04609448 ,-0.07955756, -0.10239364, -0.12078996, -0.13655441,
+ -0.15051416, -0.16313683, -0.17472627, -0.18547809, -0.19553916]
+var acf_upper = [0., 0.04609448, 0.07955756, 0.10239364, 0.12078996, 0.13655441,
+ 0.15051416, 0.16313683, 0.17472627, 0.18547809, 0.19553916]
+
+
+function draw_line_plot_01() {
+    d3.csv(xfile, function (err, rows) {
+
+        function unpack(rows, key) {
+            return rows.map(function (row) {
+                return row[key];
+            });
+        }
+
+
+        var trace1 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'Euros Observed Information',
+            x: unpack(rows, 'date'),
+            y: unpack(rows, 'value'),
+            line: {color: gcolor}
+        }
+
+        var data = [trace1];
+
+        var layout = {
+            title: 'Observed',
+            xaxis: {
+                autorange: true,
+                range: [xmin, xmax],
+                rangeselector: {
+                    buttons: [
+                        {
+                            count: 6,
+                            label: '6m',
+                            step: 'month',
+                            stepmode: 'backward'
+                        },
+                        {
+                            count: 12,
+                            label: '12m',
+                            step: 'month',
+                            stepmode: 'backward'
+                        },
+                        {step: 'all'}
+                    ]
+                },
+                rangeslider: {range: [xmin, xmax]},
+                type: 'date'
+            },
+            yaxis: {
+                autorange: true,
+                range: [xmin_value, xmax_value],
+                type: 'linear'
+            }
+        };
+
+        Plotly.newPlot('line-plot-01', data, layout);
+    })
+};
+
+
+function draw_line_plot_02() {
+    d3.csv(xfile_mean, function (err, rows) {
+
+        function unpack(rows, key) {
+            return rows.map(function (row) {
+                return row[key];
+            });
+        }
+
+
+        var trace1 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'Euros ',
+            x: unpack(rows, 'date'),
+            y: unpack(rows, 'value'),
+            line: {color: gcolor}
+        }
+
+        var data = [trace1];
+
+        var layout = {
+            title: 'Trend'
+        }
+        Plotly.newPlot('line-plot-02', data, layout);
+    })
+};
+
+function draw_line_plot_03() {
+    d3.csv(xfile_diff, function (err, rows) {
+
+        function unpack(rows, key) {
+            return rows.map(function (row) {
+                return row[key];
+            });
+        }
+
+        var trace1 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'Euros ',
+            x: unpack(rows, 'date'),
+            y: unpack(rows, 'value'),
+            line: {color: gcolor}
+        }
+
+        var data = [trace1];
+
+        var layout = {
+            title: 'Seasonality'
+        };
+
+        Plotly.newPlot('line-plot-03', data, layout);
+    })
+};
+
+
+
+function draw_autocorrelation(division,xdata,ydata,yupper, ylower, xcolor, title_corr) {
+
+    function create_stick(value,index, array) {
+
+        index=index+1
+        var trace = {
+            x: [index, index],
+            y: [0, value],
+            type: 'scatter',
+            mode: 'lines',
+            showlegend: false,
+            line: {
+                color: xcolor,
+                size: 3
+            }
+        };
+
+        return trace
+    };
+
+
+    var trace_marker = {
+            x: xdata,
+            y: ydata,
+            type: 'scatter',
+            mode: 'markers',
+            showlegend: false,
+            marker: {
+                color: xcolor,
+                size: 12,
+            }
+    };
+
+    var trace_alpha_lower ={
+        x: xdata,
+        y: ylower,
+        mode : 'lines',
+        fill: 'tozeroy',
+        type: 'scatter',
+        showlegend : false,
+        line: {
+            color: xcolor
+        }
+
+    }
+
+    var trace_alpha_upper ={
+        x: xdata,
+        y: yupper,
+        mode: 'lines',
+        fill : 'tozeroy',
+        type: 'scatter',
+        showlegend :false,
+        line: {
+            color: xcolor
+        }
+
+    }
+
+    var data = acf_x0.map(create_stick);
+
+    data.push(trace_marker);
+    data.push(trace_alpha_lower);
+    data.push(trace_alpha_upper);
+
+    var layout = {
+        title: title_corr
+    };
+
+    Plotly.newPlot(division, data, layout);
+
+
+};
+
+function draw_auto_01(){
+
+    draw_autocorrelation('auto-plot-01',xx, acf_x0, acf_lower,acf_upper, gcolor ,'Autocorrelation' );
+};
+
+function draw_auto_02(){
+
+    draw_autocorrelation('auto-plot-02',xx, acf_x0, acf_lower,acf_upper, gcolor ,'Parcial Autocorrelation' );
+
+};
+
+
+function draw_correlation(pvar1, pvar2, division, titulo, xcolor1){
+
+    var xvar1 = xpath + pvar1 + '.csv';
+    var xvar2 = xpath + pvar2 + '.csv';
+
+    var xvar_vdata = [];
+    var yvar_vdata = [];
+
+    d3.csv(xvar1, function (err, rows) {
+        function unpack1(rows, key) {
+            return rows.map(function (row) {
+                return row[key];
+            });
+        }
+
+        xvar_vdata = unpack1(rows,'value');
+
+        d3.csv(xvar2, function (err, rows) {
+            function unpack2(rows, key) {
+                return rows.map(function (row) {
+                    return row[key];
+                });
+            }
+
+            yvar_vdata = unpack2(rows,'value');
+
+            var trace1 ={
+                x: xvar_vdata,
+                y: yvar_vdata,
+                mode: 'markers',
+                type: 'scatter',
+                line: {
+                    color: xcolor1
+                }
+
+            }
+
+            var data = [trace1]
+
+            var layout = {
+                title: titulo + pvar1+' vrs.' + pvar2
+            };
+
+            Plotly.newPlot(division, data, layout);
+
+
+        });
+
+
+    });
+
+
+};
+
+
+function draw_correlation_01(){
+    draw_correlation('euros','oil','plot_scatter_01', 'Correlation Daily ', '#a79e84');
+    draw_correlation('euros_w','oil_w','plot_scatter_02', 'Correlation Weekly ', '#a79e84');
+    draw_correlation('euros_m','oil_m','plot_scatter_03', 'Correlation Montly ', '#a79e84');
+};
+
+
+draw_line_plot_01();
+draw_line_plot_02();
+draw_line_plot_03();
+draw_auto_01();
+draw_auto_02();
+draw_correlation_01();
+
+</script>
+{% endblock %}

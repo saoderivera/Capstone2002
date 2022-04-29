@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+
+
+    <div class="row">
+        <! -- accordion -->
+        <div class="col-sm-4">
+            <div class = 'divtitle'>
+                <h5 style="text-align: center">Actions</h5>
+            </div>
+
+       <! -- Begin accordion -->
+            <div class="accordion accordion-flush" id="accordionActions">
+
+                <! -- Item change -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingchange">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsechange" aria-expanded="false" aria-controls="flush-collapsechange">
+                        Change Variable
+                      </button>
+                    </h2>
+                    <div id="flush-collapsechange" class="accordion-collapse collapse" aria-labelledby="flush-headingchange" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+
+                          <form action = "{{url_for('select_variable')}}" method = "POST" enctype = "multipart/form-data">
+                              <label for="variable" class="form-label">Choose Variable:</label>
+                                <input class="form-control" list="variables" name="variable" id="variable">
+                                <datalist id="variables">
+                                  <option value="Euros">
+                                  <option value="Oil">
+                                </datalist>
+                              <hr>
+                              <input class="form-control" type="submit">
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+                <!-- End Change -->
+
+                <! -- Item Upload -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingupload">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseupload" aria-expanded="false" aria-controls="flush-collapseupload">
+                        Upload Dataset
+                      </button>
+                    </h2>
+                    <div id="flush-collapseupload" class="accordion-collapse collapse" aria-labelledby="flush-headingupload" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+                          <form action = "{{url_for('upload_file')}}" method = "POST" enctype = "multipart/form-data">
+
+                              <p>
+                                  This option only works with .csv files.
+                                  The format of the file should have two titles <strong> date</strong> with international format
+                                  <strong> yyyy-mm-dd</strong> and <strong>value</strong> The value is a number. Titles are case sensitive.
+                              </p>
+                              <hr>
+
+                              <label for="source"l>Source</label>
+                              <input class="form-control" type="text" id="source" name="source">
+                              <label for="comments">Comments</label>
+                              <textarea class="form-control" rows="3" id="comments" name="comments"></textarea>
+                              <input class="form-control" type = "file" name = "file"  accept=".csv"/>
+                              <hr>
+                              <input class="form-control" type = "submit"/>
+                          </form>
+
+                      </div>
+                    </div>
+                </div>
+                <!-- End upload -->
+
+                <! -- Item newvariable -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingnewvariable">
+                      <button class="accordion-button collapsed custom_accordion_colors" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsenewvariable" aria-expanded="false" aria-controls="flush-collapsenewvariable">
+                        New Variable
+                      </button>
+                    </h2>
+                    <div id="flush-collapsenewvariable" class="accordion-collapse collapse" aria-labelledby="flush-headingnewvariable" data-bs-parent="#accordionActions">
+                      <div class="accordion-body">
+                            <form action = "{{url_for('create_variable')}}" method = "POST" enctype = "multipart/form-data">
+                                <label for="varname"l>Variable Name</label>
+                                <input class="form-control" type="text" id="varname" name="varname">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" rows="3" id="description" name="description"></textarea>
+                                <label for="minval">Minimum Value</label>
+                                <input class="form-control" type="number" id="minval" name="minval">
+                                <label for="maxval">Maximum Value</label>
+                                <input class="form-control" type="number" id="maxval" name="maxval">
+                                <label for="typevar">Type of Information</label>
+                                <select class="form-control" id="typevar" name="typevar">
+                                  <option value="D0">Daily</option>
+                                  <option value="W0">Weekly</option>
+                                  <option value="M0">Monthly</option>
+                                </select>
+                                <hr>
+                                <input class="form-control" type = "submit"/>
+                            </form>
+                      </div>
+                    </div>
+                </div>
+                <!-- End NewVariable -->
+            </div>
+
+
+        <! -- End accordion -->
+
+        </div>
+
+        <! -- tab with the variable>
+        <div class="col-sm-7">
+            <div class="divtitle">
+                <h5>Variable:<strong> {{ dataset }}</strong></h5>
+
+            </div>
+            <div class="container-fluid">
+                <table class="table table-striped">
+                    <thead>
+
+                        <tr>
+                            <th>Date</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for value in values %}
+                            <tr>
+                                <td>{{ value.date }}</td>
+                                <td>{{ value.value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <! -- end tab with variables
+    </div>
+</div>
+{% endblock %}

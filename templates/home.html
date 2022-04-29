@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="google-slide-containers">
+        <div class="row">
+            <div class="col-sm-1">
+
+            </div>
+            <div class="col-sm-11">
+              <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRXK5iYdx1lIiXsBPW_IPXkj0jrwcs_ZBUPW6U68qUhCwNyxqUByIM4nSkPXTotNzaavqXp9zx9iKAv/embed?start=false&loop=false&delayms=30000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script>
+	TESTER = document.getElementById('tester');
+	Plotly.newPlot( TESTER, [{
+	x: [1, 2, 3, 4, 5],
+	y: [1, 2, 4, 8, 16] }], {
+	margin: { t: 0 } } );
+</script>
+{% endblock %}

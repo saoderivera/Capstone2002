@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+            <form action = "{{url_for('generate_model')}}" method = "POST" enctype = "multipart/form-data">
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <label for="dateini" class="">Start Date</label>
+                        <input class="form-control" name="dateini" id="dateini" type="date" value="2021-10-01">
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="dateini" class="">End Date</label>
+                        <input class="form-control" name="dateini" id="dateini" type="date" value="2022-03-31">
+                    </div>
+
+                    <div class="col-sm-3">
+                        <input class="form-control" name="submit" type="submit" style="margin-top: 24px">
+                    </div>
+
+                </div>
+            </form>
+            <hr stype="margin-top: 5px">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-5">
+                    {% if img!='none.png' %}
+                       <img style="width:100%" src="{{ url_for('static',filename='images/proy_model.png')}}">
+                    {% else %}
+                        <img style="width:100%" src="{{ url_for('static',filename='images/none.png')}}">
+                    {% endif %}
+
+
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+
+    </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script>
+	TESTER = document.getElementById('tester');
+	Plotly.newPlot( TESTER, [{
+	x: [1, 2, 3, 4, 5],
+	y: [1, 2, 4, 8, 16] }], {
+	margin: { t: 0 } } );
+</script>
+{% endblock %}
